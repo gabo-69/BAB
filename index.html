@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffecd2, #fcb69f, #ff9a9e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite, twinkle 2s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px;
+            z-index: 1;
+            animation: slideUp 1s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: pulseText 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        #yesBtn {
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff69b4, #ff1493, #db2777);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(219, 39, 119, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #yesBtn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        #yesBtn:hover::before {
+            left: 100%;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.15) rotate(-2deg);
+            box-shadow: 0 12px 35px rgba(219, 39, 119, 0.6);
+        }
+
+        #noBtn {
+            padding: 20px 40px;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #9e9e9e, #757575);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        #noBtn:hover {
+            background: linear-gradient(135deg, #757575, #616161);
+            transform: scale(0.95);
+        }
+
+        /* Celebration Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #fff5f8 0%, #ffe4ec 50%, #ffd1dc 100%);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.3);
+            z-index: 1001;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes modalPop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #e91e63;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+            animation: celebrateBounce 0.5s ease infinite;
+        }
+
+        @keyframes celebrateBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .modal .celebration-emoji {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: spin 2s linear infinite;
+        }
+
+        .modal h3 {
+            color: #c2185b;
+            font-size: 1.6rem;
+            margin: 25px 0 15px 0;
+            text-align: center;
+        }
+
+        .modal .info-card {
+            background: linear-gradient(135deg, #fff, #fff5f8);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            text-align: left;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid #ff69b4;
+        }
+
+        .modal .info-card p {
+            color: #555;
+            font-size: 1.2rem;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal .info-card strong {
+            color: #e91e63;
+            min-width: 120px;
+        }
+
+        .modal .wear-tip {
+            background: linear-gradient(135deg, #fff, #fff5f8);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            font-size: 1.3rem;
+            color: #c2185b;
+            font-style: italic;
+        }
+
+        .modal .itinerary {
+            background: linear-gradient(135deg, #fff, #fff5f8);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: left;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .modal .itinerary p {
+            color: #555;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 12px 15px;
+            background: rgba(233, 30, 99, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .modal .itinerary p:hover {
+            background: rgba(233, 30, 99, 0.2);
+            transform: translateX(5px);
+        }
+
+        .modal .closing {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5rem;
+            color: #e91e63;
+            font-weight: bold;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #e91e63;
+            transform: rotate(90deg);
+        }
+
+        /* Fireworks */
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fireworkLaunch 1.5s ease-out forwards;
+        }
+
+        @keyframes fireworkLaunch {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: translateY(20vh) scale(1); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: sparkle 0.5s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* Unlimited falling flowers */
+        .flower-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 998;
+            overflow: hidden;
+        }
+
+        .falling-flower {
+            position: absolute;
+            animation: fallFlower infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes fallFlower {
+            0% {
+                transform: translateY(-100px) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .question { font-size: 1.3rem; }
+            #yesBtn { padding: 15px 40px; font-size: 1.2rem; }
+            #noBtn { padding: 15px 30px; font-size: 1rem; }
+            .modal { padding: 30px; }
+            .modal h2 { font-size: 1.8rem; }
+            .modal h3 { font-size: 1.3rem; }
+        }
+
+        /* Romantic quote at bottom */
+        .quote {
+            position: fixed;
+            bottom: 20px;
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            animation: fadeInOut 4s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <h1>💕 Happy Valentine's Day! 💕</h1>
+        <p class="subtitle">My BABYYYYY SUGAR PLUM BABY CAKES OF MY LIFE, I have something to ask you...</p>
+        
+        <p class="question">Will you be my Valentine on February 14th?</p>
+        
+        <div class="buttons-container">
+            <button id="yesBtn">YES! 💖</button>
+            <button id="noBtn">No</button>
+        </div>
+
+    <p class="quote">Every moment with you is a gift 💝</p>
+
+    <!-- Celebration Modal -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal" id="celebrationModal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div class="celebration-emoji">🎉💕🎉</div>
+        <h2>YAY! She's Said YES! 💕</h2>
+        
+        <h3>💖 Valentine's Date Plan 💖</h3>
+        
+        <div class="info-card">
+            <p><strong>📅 Date:</strong> February 14, 2025</p>
+            <p><strong>🕐 Dinner:</strong> 3:30 PM — I'll pick you up! 🚗</p>
+            <p><strong>📍 Where:</strong> Manila Trip 🏙️</p>
+        </div>
+        
+        <h3>👗 What to Wear:</h3>
+        <div class="wear-tip">
+            "casual or estitik — basta kasama ka:> 💫"
+        </div>
+        
+        <h3>📋 Date Itinerary:</h3>
+        <div class="itinerary">
+            <p>🍕 FOODTRIP NEAR SKYJ 💕</p>
+            <p>🎮 Timezone — Let's play together!</p>
+            <p>📸 Photobooth — Capture memories</p>
+            <p>🍵 Matcha Date — Just us 💗</p>
+        </div>
+        
+        <p class="closing">See you on Feb 14! 🥰❤️</p>
+    </div>
+
+    <div class="fireworks" id="fireworks"></div>
+    <div class="flower-container" id="flowerContainer"></div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const modal = document.getElementById('celebrationModal');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const fireworksContainer = document.getElementById('fireworks');
+        const flowerContainer = document.getElementById('flowerContainer');
+
+        let fontSize = 1.5;
+        let noClicks = 0;
+        let flowerInterval;
+        
+        const phrases = [
+            "Are you sure? 🥺",
+            "Please think again! 🙏",
+            "Don't break my heart 💔",
+            "I'll be so sad 😢",
+            "Pretty please? 🥺",
+            "My heart is waiting 💗",
+            "Don't say no! 😟",
+            "I'll do anything! 😅",
+            "Change your mind? 😍",
+            "Give me a chance! 💫",
+            "One more chance? 🥺💕",
+            "I'm on my knees! 🙏❤️",
+            "Our date will be magical! ✨",
+            "Think of the memories! 📸",
+            "I'll make it worth it! 💖"
+        ];
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const emojis = ['💕', '💖', '💗', '💓', '💘', '❤️', '💝', '💟', '🌸', '🌺', '💐', '⭐'];
+
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('span');
+                particle.className = 'particle';
+                particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.fontSize = (Math.random() * 25 + 15) + 'px';
+                container.appendChild(particle);
+            }
+        }
+
+        // No button click handler
+        noBtn.addEventListener('click', function() {
+            noClicks++;
+
+            // Make Yes button bigger
+            fontSize += 0.5;
+            yesBtn.style.fontSize = fontSize + 'rem';
+            yesBtn.style.padding = (20 + (noClicks * 10)) + 'px ' + (60 + (noClicks * 20)) + 'px';
+
+            // Change No button text but keep it in place
+            if (noClicks <= phrases.length) {
+                noBtn.textContent = phrases[noClicks - 1];
+            } else {
+                noBtn.textContent = "Please say YES! 🥺💕";
+            }
+
+            // Make No button pulse to show it was clicked
+            noBtn.style.transform = 'scale(1.1)';
+            setTimeout(() => { noBtn.style.transform = 'scale(1)'; }, 200);
+        });
+
+        // Yes button click handler
+        yesBtn.addEventListener('click', function() {
+            modal.style.display = 'block';
+            modalOverlay.style.display = 'block';
+            createFireworks();
+            startUnlimitedFlowers();
+        });
+
+        // Close modal
+        function closeModal() {
+            modal.style.display = 'none';
+            modalOverlay.style.display = 'none';
+            stopUnlimitedFlowers();
+        }
+
+        modalOverlay.addEventListener('click', closeModal);
+
+        // Create fireworks celebration
+        function createFireworks() {
+            const colors = ['#ff69b4', '#ff1493', '#ff6347', '#ffd700', '#00ff7f', '#00bfff', '#ff69b4'];
+            const emojis = ['💕', '💖', '💗', '💓', '💘', '❤️', '💝', '💟', '🎉', '✨', '💫', '🌟'];
+
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = Math.random() * 100 + '%';
+                    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    sparkle.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    sparkle.style.left = '0';
+                    sparkle.style.top = '0';
+                    
+                    firework.appendChild(sparkle);
+                    fireworksContainer.appendChild(firework);
+
+                    setTimeout(() => firework.remove(), 1500);
+                }, i * 30);
+            }
+        }
+
+        // Unlimited flowers with purple tulips
+        function startUnlimitedFlowers() {
+            // Purple tulips and other flowers
+            const purpleTulips = ['🪷', '💮', '🏵️', '🌸', '🌺', '🌷'];
+            const allFlowers = ['🌸', '🌺', '💐', '🌷', '🌹', '🥀', '🌻', '🌼', '🏵️', '💮', '🪷'];
+            
+            // Create a flower every 100ms
+            flowerInterval = setInterval(() => {
+                const flower = document.createElement('div');
+                flower.className = 'falling-flower';
+                
+                // 60% chance for purple tulip-like flowers
+                const isPurple = Math.random() < 0.6;
+                const flowerEmoji = isPurple 
+                    ? purpleTulips[Math.floor(Math.random() * purpleTulips.length)]
+                    : allFlowers[Math.floor(Math.random() * allFlowers.length)];
+                
+                flower.textContent = flowerEmoji;
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.fontSize = (Math.random() * 35 + 20) + 'px';
+                flower.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                flower.style.filter = isPurple ? 'hue-rotate(280deg) saturate(1.5)' : 'none';
+                
+                flowerContainer.appendChild(flower);
+
+                // Remove flower after animation
+                setTimeout(() => {
+                    flower.remove();
+                }, 7000);
+            }, 100);
+        }
+
+        function stopUnlimitedFlowers() {
+            if (flowerInterval) {
+                clearInterval(flowerInterval);
+            }
+            // Clear existing flowers
+            flowerContainer.innerHTML = '';
+        }
+
+        // Initialize
+        createParticles();
+    </script>
+</body>
+</html>
